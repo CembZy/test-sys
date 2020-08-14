@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <a class="btn btn-primary" @click="getInfo"><i class="fa fa-file-code-o"></i>&nbsp;新闻详情</a>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <div id="news" style="width: 80%; position: relative; left: 10%; ">
+            <div id="title"
+                 style="height: 40px; text-align:center; line-height: 40px; margin-top: 35px;font-weight:bold;font-size: 2em;"></div>
+            <article id="content" style="margin-top: 45px; text-align:center; "></article>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label"></div>
+            <input type="button" class="btn btn-warning" @click="reload" value="返回"
+                   style="left: 60%; position: relative;"/>
+        </div>
+    </div>
+</div>
+<script src="${request.contextPath}/statics/js/common.js?_${.now?long}"></script>
+<script src="${request.contextPath}/statics/js/modules/myself/myself.js?_${.now?long}"></script>
+</body>
+</html>

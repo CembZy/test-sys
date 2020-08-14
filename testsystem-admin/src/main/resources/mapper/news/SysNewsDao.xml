@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.SysNewsDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.news.entity.SysNewsEntity" id="sysNewsMap">
+        <result property="newId" column="new_id"/>
+        <result property="body" column="body"/>
+        <result property="createTime" column="create_time"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="title" column="title"/>
+        <result property="admin" column="admin"/>
+        <result property="num" column="num"/>
+    </resultMap>
+
+
+</mapper>

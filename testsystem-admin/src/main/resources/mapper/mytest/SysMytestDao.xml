@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.mytest.dao.SysMytestDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.mytest.entity.SysMytestEntity" id="sysMytestMap">
+        <result property="mytestId" column="mytest_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="testId" column="test_id"/>
+        <result property="adminId" column="admin_id"/>
+        <result property="price" column="price"/>
+        <result property="inprice" column="inprice"/>
+        <result property="kuangkao" column="kuangkao"/>
+        <result property="userName" column="user_name"/>
+        <result property="testName" column="test_name"/>
+        <result property="pingjuan" column="pingjuan"/>
+        <result property="date" column="date"/>
+        <result property="type" column="type"/>
+        <result property="orders" column="orders"/>
+    </resultMap>
+    <update id="updat">
+        UPDATE sys_mytest SET price=#{price} ,inprice=#{inprice} ,pingjuan=#{pingjuan}
+        WHERE mytest_id=#{mytestId}
+    </update>
+
+
+    <select id="getInfos" resultType="io.renren.modules.mytest.entity.SysMytestEntity">
+        SELECT
+        *,COUNT(*) as num1,(SUM(price)/COUNT(*)) as price1
+        FROM
+        sys_mytest
+        <where>
+            <if test="userId!=null">
+                and  admin_id=#{userId}
+            </if>
+            <if test="testName!=null and testName!=''">
+                and test_name=#{testName}
+            </if>
+        </where>
+        GROUP BY
+        orders,test_id
+    </select>
+</mapper>

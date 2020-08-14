@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.answer.dao.SysAnswerDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.answer.entity.SysAnswerEntity" id="sysAnswerMap">
+        <result property="answerId" column="answer_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="testId" column="test_id"/>
+        <result property="subjectId" column="subject_id"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="orders" column="orders"/>
+        <result property="price" column="price"/>
+        <result property="falg" column="falg"/>
+        <result property="uuid" column="uuid"/>
+        <result property="shanchu" column="shanchu"/>
+    </resultMap>
+
+    <update id="updat" parameterType="java.lang.Long">
+        UPDATE sys_answer SET price=#{price}
+        WHERE answer_id=#{answerId}
+    </update>
+
+    <update id="updat3">
+        UPDATE sys_answer SET shanchu=1
+        WHERE subject_id=#{subjectId} and user_id=#{userId} and falg=0
+    </update>
+
+    <select id="getPrice" resultType="java.lang.Long">
+        select SUM(price)  FROM sys_answer WHERE user_id=#{userId}
+        AND test_id=#{testId} AND orders=#{orders}
+    </select>
+
+    <select id="getCuoti" resultType="io.renren.modules.answer.entity.SysAnswerEntity">
+        SELECT sa.*,COUNT(*) as num,sj.`name` as name3,sj.topic_id as topicId ,st.`name` as name4 FROM
+        sys_answer sa
+        INNER JOIN sys_subject sj on sa.subject_id=sj.subject_id
+        INNER JOIN sys_topic st on st.topic_id=sj.topic_id
+        WHERE
+        sa.user_id=#{userId}
+        and sa.falg=0
+        and sa.shanchu=0
+        <if test="topicName!=null and topicName!='' ">
+            and st.`name` like concat("%",#{topicName},"%")
+        </if>
+        <if test="subjectName!=null and subjectName!='' ">
+            and sj.`name` like concat("%",#{subjectName},"%")
+        </if>
+        GROUP BY sa.subject_id
+        ORDER BY num DESC
+    </select>
+
+</mapper>

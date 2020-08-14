@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.book.dao.SysBookDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.book.entity.SysBookEntity" id="sysBookMap">
+        <result property="bookId" column="book_id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="num" column="num"/>
+        <result property="admin" column="admin"/>
+        <result property="createTime" column="create_time"/>
+        <result property="body" column="body"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+
+</mapper>

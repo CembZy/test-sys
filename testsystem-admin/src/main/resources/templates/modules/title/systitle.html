@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>试题表</title>
+    <#include "/header.html">
+    <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">
+    <link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
+    <script src="${request.contextPath}/statics/libs/bootstrap-table.min.js"></script>
+    <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.min.js"></script>
+    <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.bootstrap3.js"></script>
+    <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.extension.js"></script>
+    <script src="${request.contextPath}/statics/plugins/treegrid/tree.table.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <div class="form-group col-sm-2">
+                <input type="text" class="form-control" style="cursor:pointer;" v-model="q.deptName"
+                       @click="deptTree2" readonly="readonly" placeholder="参考部门"/>
+            </div>
+            <div class="form-group col-sm-2">
+                <input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="所属试卷">
+            </div>
+            <a class="btn btn-default" @click="query">查询</a>
+            <#if shiro.hasPermission("sys:systitle:save")>
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+        </#if>
+        <#if shiro.hasPermission("sys:systitle:update")>
+        <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+    </#if>
+    <#if shiro.hasPermission("sys:systitle:delete")>
+    <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+</#if>
+</div>
+<table id="jqGrid"></table>
+<div id="jqGridPager"></div>
+</div>
+
+<div v-show="!showList" class="panel panel-default">
+    <div class="panel-heading">{{title}}</div>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2 control-label">所属试卷</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" style="cursor:pointer;"
+                       v-model="sysTitle.deptName" @click="deptTree" readonly="readonly" placeholder="参考部门" id="deptName"/>
+
+                <div class="col-sm-2 control-label"></div>
+                <select v-model="sysTitle.type" class="refresh-seconds-select btn" style="width:370px;border: 1px solid #ccc;"   @change='changeTypes'>
+                    <option v-for="item in types" :value="item.value">{{item.text}}</option>
+                </select>
+
+                <div class="col-sm-2 control-label"></div>
+                <select v-model="sysTitle.testId" class="refresh-seconds-select btn" style="width:370px;border: 1px solid #ccc;">
+                    <option v-for="item in tests" :value="item.text">{{item.value}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">选择题目</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" style="cursor:pointer;"
+                       v-model="sysTitle.courseName" @click="courseTree" readonly="readonly" placeholder="一级科目" id="courseName"/>
+
+                <div class="col-sm-2 control-label"></div>
+                <select v-model="sysTitle.topicId" class="refresh-seconds-select btn" style="width:370px;border: 1px solid #ccc;" @change='changeTopicName'>
+                    <option v-for="item in topics" :value="item.value">{{item.text}}</option>
+                </select>
+
+                <div class="col-sm-2 control-label"></div>
+                <select v-model="sysTitle.subjectId" class="refresh-seconds-select btn" style="width:370px;border: 1px solid #ccc;">
+                    <option v-for="item in subjects" :value="item.value">{{item.text}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">题目顺序</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="sysTitle.orders" placeholder="题目顺序"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label"></div>
+            <input type="button" class="btn btn-primary" id="btnSaveOrUpdate" data-loading-text="保存中..."
+                   @click="saveOrUpdate" value="确定"/>
+            &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+        </div>
+    </form>
+</div>
+</div>
+
+
+<div id="courseLayer" style="display: none;padding:10px;">
+    <ul id="courseTree" class="ztree"></ul>
+</div>
+
+<!-- 选择部门 -->
+<div id="deptLayer" style="display: none;padding:10px;">
+    <ul id="deptTree" class="ztree"></ul>
+</div>
+<script src="${request.contextPath}/statics/js/common.js?_${.now?long}"></script>
+<script src="${request.contextPath}/statics/js/modules/title/systitle.js?_${.now?long}"></script>
+</body>
+</html>

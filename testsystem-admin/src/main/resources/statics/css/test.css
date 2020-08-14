@@ -1,0 +1,205 @@
+
+#title {
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    margin-top: 35px;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+#info {
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 1em;
+    margin-left: 75%;
+}
+
+hr {
+    color: #0f6ab4;
+    height: 5px;
+}
+
+#content {
+    margin-top: 45px;
+    text-align: center;
+}
+
+.test_paper_top .paper_title {
+    font-weight: normal;
+    font-size: 28px;
+    color: #000;
+    text-align: center;
+    margin-top: 51px;
+}
+
+.test_paper_top .paper_right {
+    font-size: 16px;
+    color: #666;
+    text-align: right
+}
+
+.padding15 {
+    padding: 0 0px;
+    width: 106%;
+    margin-left: -3%;
+}
+
+.write_in {
+    margin-top: 50px;
+    border: 1px #cccccc solid;
+}
+
+.write_in table {
+    font-size: 14px;
+    width: 100%;
+}
+
+.write_in table td {
+    height: 30px;
+    line-height: 30px;
+    padding: 5px 15px;
+    vertical-align: top;
+}
+
+.write_in table td.trmenu {
+    background-color: #3c8dbc;
+    color: #fff;
+    padding: 5px 15px;
+    font-size: 14px;
+}
+
+radio {
+    font-family: Microsoft Yahei;
+    box-sizing: border-box;
+    font-size: 12px;
+    padding-left: 3px;
+}
+
+.paper_right label {
+    color: red;
+    font-weight: 500;
+    margin: 0 5px;
+}
+
+.normal_input {
+    width: 50%;
+    height: 25px;
+    border: 1px #e2e2e2 solid;
+    margin-bottom: 10px;
+}
+
+.write_btn {
+    margin: 40px auto;
+    text-align: center;
+}
+
+.write_btn input {
+    margin: 0 10px;
+    padding: 0 15px;
+    border: 0;
+    cursor: pointer;
+    height: 30px;
+    line-height: 30px;
+    background: #3c8dbc;
+    color: #fff;
+}
+
+.write_btn input:hover {
+    background: #f19f23;
+}
+
+.file {
+    position: relative;
+    display: inline-block;
+    background: #337ab7;
+    border: 1px solid #2e6da4;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #fff;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 24px;
+    width: 90px;
+    cursor: pointer;
+}
+
+.file input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.file:hover {
+    background: #AADFFD;
+    border-color: #78C3F3;
+    color: #004974;
+    text-decoration: none;
+    cursor: pointer;
+
+}
+
+#news {
+    width: 90%;
+    position: relative;
+    left: 5%;
+}
+
+#news2 {
+    width: 90%;
+    position: relative;
+    left: 5%;
+}
+
+#fh {
+    margin-top: 20px;
+    margin-left: 70%;
+}
+
+.write_in2 {
+    margin-top: 50px;
+    border: 1px #cccccc solid;
+}
+
+.write_in2 table {
+    font-size: 14px;
+    width: 100%;
+}
+
+.write_in2 table td {
+    height: 30px;
+    line-height: 30px;
+    padding: 5px 15px;
+    vertical-align: top;
+}
+
+.write_in2 table td.trmenu2 {
+    padding: 10px 15px;
+    font-size: 14px;
+}
+
+.test_paper_top .paper_title {
+    font-weight: normal;
+    font-size: 28px;
+    color: #000;
+    text-align: center;
+    margin-top: 51px;
+}
+
+.test_paper_top .paper_right {
+    font-size: 16px;
+    color: #666;
+    text-align: right
+}
+
+.padding16 {
+    padding: 0 0px;
+    width: 106%;
+    margin-left: -3%;
+}

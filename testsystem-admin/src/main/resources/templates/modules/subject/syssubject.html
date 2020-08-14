@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <#include "/header.html">
+    <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap-table.min.css">
+    <link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
+    <script src="${request.contextPath}/statics/libs/bootstrap-table.min.js"></script>
+    <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.min.js"></script>
+    <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.bootstrap3.js"></script>
+    <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.extension.js"></script>
+    <script src="${request.contextPath}/statics/plugins/treegrid/tree.table.js"></script>
+    <link rel="stylesheet" href="${request.contextPath}/statics/plugins/3.1.0/release/wangEditor.min.css"/>
+    <script type="text/javascript" src="${request.contextPath}/statics/plugins/3.1.0/release/wangEditor.min.js"></script>
+    <style>
+        .file {
+            position: relative;
+            display: inline-block;
+            background: #337ab7;
+            border: 1px solid #2e6da4;
+            border-radius: 4px;
+            padding: 4px 12px;
+            overflow: hidden;
+            color: #fff;
+            text-decoration: none;
+            text-indent: 0;
+            line-height: 24px;
+            width: 90px;
+            cursor: pointer;
+        }
+        .file input {
+            position: absolute;
+            font-size: 100px;
+            right: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            text-decoration:none;
+        }
+        .file:hover {
+            background: #AADFFD;
+            border-color: #78C3F3;
+            color: #004974;
+            text-decoration: none;
+            cursor: pointer;
+
+        }
+
+
+        @media  screen and (min-width: 2000px) {
+            #editor{
+                width: 400%;
+            }
+        }
+        @media  screen  and (min-width: 1887px) and (max-width: 2000px) {
+            #editor{
+                width: 400%;
+            }
+        }
+        @media  screen  and (min-width: 1519px) and (max-width: 1886px) {
+            #editor{
+                width: 300%;
+            }
+        }
+        @media  screen and (min-width: 1200px) and (max-width: 1518px) {
+            #editor{
+                width: 260%;
+            }
+        }
+        @media  screen and (min-width: 980px) and (max-width: 1199px) {
+            #editor{
+                width: 260%;
+            }
+        }
+        @media  screen and (min-width: 0px) and (max-width: 570px) {
+            #editor{
+                width: 60%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="rrapp" v-cloak >
+    <div v-show="showList"  id="show1">
+        <div class="grid-btn">
+            <div class="form-group col-sm-2" style="width: 150px;">
+                <input type="text" class="form-control" style="cursor:pointer;"
+                       v-model="q.courseName" @click="courseTree2" readonly="readonly" placeholder="所属科目"/>
+            </div>
+            <div class="form-group col-sm-2" style="width: 150px;">
+                <input type="text" class="form-control" v-model="q.topicName" @keyup.enter="query" placeholder="题型名称">
+            </div>
+            <a class="btn btn-default" @click="query">查询</a>
+            <#if shiro.hasPermission("sys:syssubject:save")>
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+        </#if>
+        <#if shiro.hasPermission("sys:syssubject:update")>
+        <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+    </#if>
+    <#if shiro.hasPermission("sys:syssubject:delete")>
+    <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+    <a class="btn btn-primary" @click="input"><i class="fa fa-keyboard-o"></i>&nbsp;导入题库</a>
+    <a class="btn btn-primary" @click="output"><i class="fa fa-outdent"></i>&nbsp;导出题库</a>
+</#if>
+</div>
+<table id="jqGrid"></table>
+<div id="jqGridPager"></div>
+</div>
+
+<div v-show="!showList2" class="panel panel-default">
+    <div class="panel-heading">{{title}}</div>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2 control-label">编辑内容</div>
+            <div class="col-sm-10">
+                <div id="editor"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label"></div>
+            <input type="button" class="btn btn-primary" id="btnSaveOrUpdate2" data-loading-text="保存中..."
+                   @click="save"  value="确定"/>
+            &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="qx" value="返回"/>
+        </div>
+    </form>
+</div>
+
+
+
+<div v-show="!showList" class="panel panel-default">
+    <div class="panel-heading">{{title}}</div>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2 control-label">题目名称</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="sysSubject.name" placeholder="题目名称"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">选择题型</div>
+            <div class="col-sm-10">
+                <select v-model="sysSubject.topicId"  @change='changeCatalog' class="refresh-seconds-select btn" style="width:370px;border: 1px solid #ccc;">
+                    <option v-for="item in items" :value="item.value">{{item.text}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">所属科目</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" style="cursor:pointer;"
+                       v-model="sysSubject.courseName" @click="courseTree" readonly="readonly" placeholder="一级科目"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">题目难度</div>
+            <div class="col-sm-10">
+                <select v-model="sysSubject.difficulty" class="refresh-seconds-select btn" style="width:370px;border: 1px solid #ccc;">
+                    <option v-for="item in items2" :value="item.value">{{item.text}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" id="selectnum">
+            <div class="col-sm-2 control-label">选项数量</div>
+            <div class="col-sm-10">
+                <select v-model="sysSubject.num" class="refresh-seconds-select btn" style="width:370px;border: 1px solid #ccc;" @change="changeNum">
+                    <option v-for="item in items3" :value="item.value">{{item.text}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">题目分数</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" v-model="sysSubject.price" placeholder="题目分数"/>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-sm-2 control-label">题目内容</div>
+            <div class="col-sm-10">
+                <a class="btn btn-primary" @click="saveOrUpdate2('content')" id="contentText"><i class="fa fa-plus"></i>&nbsp;未编辑</a>
+            </div>
+        </div>
+        <div class="form-group" id="select">
+            <div class="col-sm-2 control-label">选项</div>
+            <div class="col-sm-10" id="select1">
+                <div v-for="num in nums1">
+                    <div class="col-sm-1 control-label">{{num.text}}</div>
+                    <div class="col-sm-11">
+                        <a class="btn btn-primary"  @click="saveOrUpdate2(num.text)" :id="num.text+'Text'">{{num.value}}</a>
+                    </div>
+                    <div class="col-sm-12 control-label"></div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" id="answer">
+            <div class="col-sm-2 control-label">答案</div>
+            <div class="col-sm-10">
+                <a class="btn btn-primary" @click="saveOrUpdate2('answer')" id="answerText"><i class="fa fa-plus"></i>&nbsp;未编辑</a>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">解析</div>
+            <div class="col-sm-10">
+                <a class="btn btn-primary" @click="saveOrUpdate2('parse')" id="parseText"><i class="fa fa-plus"></i>&nbsp;未编辑</a>
+            </div>
+        </div>
+        <div class="form-group" id="file">
+            <div class="col-sm-2 control-label">文件</div>
+            <div class="col-sm-10">
+                <a href="javascript:;" class="file">
+                    <input type="file"  name="file" id="sc">上传文件
+                </a>
+            </div>
+        </div>
+
+        <div class="form-group" id="answert">
+            <div class="col-sm-2 control-label">判断题答案</div>
+            <div class="col-sm-10">
+                <label class="radio-inline">
+                    <input type="radio" name="answert" value="正确" v-model="sysSubject.answert"/> 正确
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="answert" value="错误" v-model="sysSubject.answert"/> 错误
+                </label>
+            </div>
+        </div>
+        <div class="form-group" id="answertt">
+            <div class="col-sm-2 control-label">选择题答案</div>
+            <div class="col-sm-10">
+                <label v-for="num in nums1" class="checkbox-inline" @change="change4">
+                    <div v-if="num.text3==true">
+                        <input type="checkbox"  :value="num.text"  checked  :id="num.text+'checkbox'">{{num.text}}
+                    </div>
+                    <div v-if="num.text3==false">
+                        <input type="checkbox"  :value="num.text" :id="num.text+'checkbox'">{{num.text}}
+                    </div>
+                </label>
+            </div>
+        </div>
+        <div class="form-group" id="tofile">
+            <div class="col-sm-2 control-label">查看文件</div>
+            <div class="col-sm-10">
+                <span class="btn-upload" style="margin-right: 20px;">
+                    <a class="btn btn-primary"  id="fileUrl" href="">下载文件</a>
+                </span>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-sm-2 control-label"></div>
+            <input type="button" class="btn btn-primary" id="btnSaveOrUpdate" data-loading-text="保存中..."
+                   @click="saveOrUpdate" value="确定"/>
+            &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+        </div>
+    </form>
+</div>
+
+<div v-show="!showList3" class="panel panel-default">
+    <div class="panel-heading">{{title}}</div>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2 control-label">导入模板</div>
+            <div class="col-sm-10">
+                <span class="btn-upload" style="margin-right: 20px;">
+                    <a class="btn btn-primary" href="${request.contextPath}/statics/excel/ImportTest.xls">下载文件</a>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">导入题库</div>
+            <div class="col-sm-10">
+                <a href="javascript:;" class="file">
+                    <input type="file"  name="file" id="up">上传文件
+                </a>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">所属科目</div>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" style="cursor:pointer;" v-model="sysSubject.courseName" @click="courseTree" readonly="readonly" placeholder="一级科目"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label"></div>
+            <input type="button" class="btn btn-primary" id="btnSaveOrUpdate3" data-loading-text="保存中..."
+                   @click="saveOrUpdate4" value="确定"/>
+            &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+        </div>
+    </form>
+</div>
+
+
+
+</div>
+
+<div id="courseLayer" style="display: none;padding:10px;">
+    <ul id="courseTree" class="ztree"></ul>
+</div>
+
+<script src="${request.contextPath}/statics/js/common.js?_${.now?long}"></script>
+<script src="${request.contextPath}/statics/js/modules/subject/syssubject.js?_${.now?long}"></script>
+</body>
+</html>

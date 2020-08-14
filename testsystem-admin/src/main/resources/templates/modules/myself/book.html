@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>电子书籍表</title>
+    <#include "/header.html">
+    <link rel="stylesheet" href="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.css">
+    <script src="${request.contextPath}/statics/libs/bootstrap-table.min.js"></script>
+    <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.min.js"></script>
+    <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.bootstrap3.js"></script>
+    <script src="${request.contextPath}/statics/plugins/treegrid/jquery.treegrid.extension.js"></script>
+    <script src="${request.contextPath}/statics/plugins/treegrid/tree.table.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <div class="form-group col-sm-2">
+                <input type="text" class="form-control" style="cursor:pointer;" v-model="q.courseName"
+                       @click="courseTree2" readonly="readonly" placeholder="所属科目"/>
+            </div>
+            <div class="form-group col-sm-2">
+                <input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="书籍名称">
+            </div>
+            <a class="btn btn-default" @click="query">查询</a>
+            <a class="btn btn-primary" @click="getNewsInfo"><i class="fa fa-file-code-o"></i>&nbsp;书籍详情</a>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <div id="news" style="width: 80%; position: relative; left: 10%; ">
+            <div id="title"
+                 style="height: 40px; text-align:center; line-height: 40px; margin-top: 35px; font-weight:bold;font-size: 2em;"></div>
+            <article id="content" style="margin-top: 45px; text-align:center; "></article>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label"></div>
+            <input type="button" class="btn btn-warning" @click="reload" value="返回"
+                   style="left: 60%; position: relative;"/>
+        </div>
+    </div>
+</div>
+
+<div id="courseLayer" style="display: none;padding:10px;">
+    <ul id="courseTree" class="ztree"></ul>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/myself/book.js?_${.now?long}"></script>
+<script src="${request.contextPath}/statics/js/common.js?_${.now?long}"></script>
+</body>
+</html>

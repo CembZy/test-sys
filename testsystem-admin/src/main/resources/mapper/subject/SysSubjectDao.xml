@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.subject.dao.SysSubjectDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.subject.entity.SysSubjectEntity" id="sysSubjectMap">
+        <result property="subjectId" column="subject_id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="topicId" column="topic_id"/>
+        <result property="difficulty" column="difficulty"/>
+        <result property="num" column="num"/>
+        <result property="uuid" column="uuid"/>
+        <result property="price" column="price"/>
+        <result property="content" column="content"/>
+        <result property="admin" column="admin"/>
+        <result property="answer" column="answer"/>
+        <result property="createTime" column="create_time"/>
+        <result property="file" column="file"/>
+        <result property="parse" column="parse"/>
+        <result property="answert" column="answert"/>
+        <result property="answertt" column="answertt"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+
+    <select id="queryIds" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT subject_id FROM sys_subject WHERE course_id = #{courseId} and topic_id = #{topicId}
+    </select>
+
+    <select id="queryInfos" resultType="io.renren.modules.subject.entity.SysSubjectEntity">
+        SELECT
+        *,COUNT(*) as num2
+        FROM
+            sys_subject
+        GROUP BY
+            course_id,topic_id,difficulty
+    </select>
+
+
+    <select id="getCuoti" parameterType="java.lang.Long" resultType="io.renren.modules.subject.entity.SysSubjectEntity">
+        SELECT ss.*,st.`name` as topicName FROM sys_subject ss
+        INNER JOIN sys_topic st ON st.topic_id=ss.topic_id
+        WHERE ss.subject_id = #{subjectId}
+    </select>
+</mapper>

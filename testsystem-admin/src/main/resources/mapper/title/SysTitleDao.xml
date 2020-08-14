@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.title.dao.SysTitleDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.title.entity.SysTitleEntity" id="sysTitleMap">
+        <result property="titleId" column="title_id"/>
+        <result property="testId" column="test_id"/>
+        <result property="subjectId" column="subject_id"/>
+        <result property="orders" column="orders"/>
+        <result property="admin" column="admin"/>
+        <result property="createTime" column="create_time"/>
+        <result property="topic_id" column="topicId"/>
+    </resultMap>
+
+
+    <select id="getSubjects" resultType="io.renren.modules.subject.entity.SysSubjectEntity">
+        SELECT ss.*, syt.name as topicName ,st.orders as orders
+        FROM sys_title st
+        INNER JOIN sys_subject ss ON ss.subject_id = st.subject_id
+        INNER JOIN sys_topic syt ON ss.topic_id = syt.topic_id
+        WHERE  st.test_id=#{testId} and st.admin=#{userId}
+        AND
+         st.orders =
+         (select orders as a from sys_title  WHERE
+	      test_id = #{testId}
+          AND admin = #{userId}  GROUP BY orders ORDER BY orders DESC LIMIT 0,1)
+    </select>
+
+    <select id="getSubjects2" resultType="io.renren.modules.subject.entity.SysSubjectEntity">
+        SELECT DISTINCT ss.subject_id, ss.*, syt.name as topicName ,st.orders as orders
+        FROM sys_title st
+        INNER JOIN sys_subject ss ON ss.subject_id = st.subject_id
+        INNER JOIN sys_topic syt ON ss.topic_id = syt.topic_id
+        WHERE  st.test_id=#{testId} and st.admin=#{userId}
+        AND
+        st.orders =#{orders}
+    </select>
+
+    <select id="getCount" resultType="java.lang.Long">
+        SELECT
+	    SUM(ss.price)
+        FROM
+            sys_title st
+        INNER JOIN sys_subject ss ON ss.subject_id = st.subject_id
+        INNER JOIN sys_topic syt ON ss.topic_id = syt.topic_id
+        WHERE
+	    st.test_id = #{testId} and syt.topic_id=#{topicId}
+        and st.admin=#{userId}
+        and st.orders=
+        (SELECT orders FROM sys_title st WHERE
+            st.test_id =#{testId}  GROUP BY orders
+        order by orders DESC  LIMIT 0,1)
+    </select>
+
+    <select id="getOne" resultType="java.lang.Integer">
+        SELECT
+	      orders
+        FROM
+            sys_title st
+        WHERE
+	    st.test_id = #{testId} and st.admin=#{userId}
+	    ORDER BY st.orders DESC
+	    LIMIT 0,1
+    </select>
+
+</mapper>
